@@ -1,13 +1,16 @@
-
 export interface Message {
   role: 'user' | 'model';
   content: string;
 }
 
-export type Category = 'documentation' | 'schematics' | 'software' | 'parts' | 'qnap' | 'troubleshooting' | 'fileLibrary';
+export type FileType = 'pdf' | 'zip' | 'xlsx' | 'docx' | 'png' | 'csv' | 'other';
 
 export interface FileItem {
-  id: number;
+  id: string;
   name: string;
-  type: 'pdf' | 'zip' | 'xlsx' | 'docx' | 'other';
+  kind: 'file' | 'folder';
+  fileType?: FileType;
+  children?: FileItem[];
+  mimeType?: string;
+  webViewLink?: string;
 }
