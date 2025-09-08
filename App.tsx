@@ -142,7 +142,7 @@ const App: React.FC = () => {
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        backgroundColor: '#121212', // Match with dark-900
+        backgroundColor: '#2c2c24', // Match with dark-900 (Dark Graphite)
         scrollY: -window.scrollY,
         height: element.scrollHeight,
         windowHeight: element.scrollHeight,
