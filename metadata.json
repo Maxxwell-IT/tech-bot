@@ -1,0 +1,5 @@
+{
+  "name": "Tech-Bot Assistant",
+  "description": "An AI assistant to help you navigate equipment documentation, instructions, schematics, and troubleshooting guides. Get quick access to software, spare parts lists, and shared resources.",
+  "requestFramePermissions": []
+}
