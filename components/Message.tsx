@@ -20,7 +20,7 @@ const formatContent = (content: string) => {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-300 underline"
+                    className="text-brand-primary hover:text-brand-primary-hover underline"
                 >
                     {part}
                 </a>
@@ -44,8 +44,8 @@ export const Message: React.FC<MessageProps> = ({ role, content }) => {
   const isUser = role === 'user';
   const wrapperClass = isUser ? 'justify-end' : 'justify-start';
   const bubbleClass = isUser
-    ? 'bg-blue-600 text-white'
-    : 'bg-slate-700 text-slate-200';
+    ? 'bg-brand-primary text-dark-900 font-semibold'
+    : 'bg-dark-700 text-slate-200';
 
   return (
     <div className={`flex ${wrapperClass} animate-fade-in-slide-up`}>

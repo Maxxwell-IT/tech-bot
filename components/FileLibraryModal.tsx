@@ -48,7 +48,7 @@ export const FileLibraryModal: React.FC<FileLibraryModalProps> = ({ isOpen, onCl
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className="flex flex-col items-center justify-center text-center text-slate-400 py-16">
+        <div className="flex flex-col items-center justify-center text-center text-dark-500 py-16">
           <SpinnerIcon className="w-8 h-8 mb-4"/>
           <p>Завантаження файлів...</p>
         </div>
@@ -70,7 +70,7 @@ export const FileLibraryModal: React.FC<FileLibraryModalProps> = ({ isOpen, onCl
             <li key={file.id}>
               <button 
                 onClick={() => onFileSelect(file)}
-                className="w-full flex items-center p-3 text-left text-slate-300 rounded-lg hover:bg-slate-700 transition-colors duration-200 focus:outline-none focus:bg-slate-700 focus:ring-2 focus:ring-blue-500"
+                className="w-full flex items-center p-3 text-left text-slate-300 rounded-lg hover:bg-dark-600 transition-colors duration-200 focus:outline-none focus:bg-dark-600 focus:ring-2 focus:ring-brand-primary"
               >
                 <FileIcon fileType={file.type} className="w-6 h-6 mr-4 flex-shrink-0" />
                 <span className="font-medium truncate">{file.name}</span>
@@ -82,7 +82,7 @@ export const FileLibraryModal: React.FC<FileLibraryModalProps> = ({ isOpen, onCl
     }
 
     return (
-      <div className="text-center text-slate-400 py-16">
+      <div className="text-center text-dark-500 py-16">
         <p>Файли не знайдено.</p>
       </div>
     );
@@ -97,27 +97,27 @@ export const FileLibraryModal: React.FC<FileLibraryModalProps> = ({ isOpen, onCl
         aria-labelledby="file-library-title"
     >
       <div 
-        className="bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col border border-slate-700 animate-fade-in-slide-up"
+        className="bg-dark-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col border border-dark-600 animate-fade-in-slide-up"
         onClick={e => e.stopPropagation()}
       >
-        <header className="flex items-center justify-between p-4 border-b border-slate-700">
+        <header className="flex items-center justify-between p-4 border-b border-dark-600">
           <h2 id="file-library-title" className="text-xl font-bold text-white">Бібліотека файлів</h2>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-700" aria-label="Close file library">
-            <CloseIcon className="w-6 h-6 text-slate-400" />
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-dark-600" aria-label="Close file library">
+            <CloseIcon className="w-6 h-6 text-dark-500" />
           </button>
         </header>
 
-        <div className="p-4 border-b border-slate-700">
+        <div className="p-4 border-b border-dark-600">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <SearchIcon className="h-5 w-5 text-slate-400" />
+                <SearchIcon className="h-5 w-5 text-dark-500" />
             </div>
             <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Пошук файлів..."
-                className="block w-full bg-slate-700 border border-slate-600 rounded-lg py-2 pl-10 pr-3 text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="block w-full bg-dark-700 border border-dark-600 rounded-lg py-2 pl-10 pr-3 text-slate-200 placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 aria-label="Search files"
             />
           </div>

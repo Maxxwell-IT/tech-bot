@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SearchIcon } from './icons/SearchIcon';
 
@@ -21,7 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => 
   return (
     <form onSubmit={handleSubmit} className="relative">
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <SearchIcon className="h-5 w-5 text-slate-400" />
+        <SearchIcon className="h-5 w-5 text-dark-500" />
       </div>
       <input
         type="text"
@@ -29,7 +28,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => 
         onChange={(e) => setQuery(e.target.value)}
         disabled={isLoading}
         placeholder="Пошук ресурсів..."
-        className="block w-full bg-slate-700/80 border border-slate-600 rounded-lg py-2 pl-10 pr-3 text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
+        className="block w-full bg-dark-700/80 border border-dark-600 rounded-lg py-2 pl-10 pr-3 text-slate-200 placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-primary sm:text-sm"
         aria-label="Search resources"
       />
     </form>

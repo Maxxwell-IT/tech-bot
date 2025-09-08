@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { type Chat } from "@google/genai";
 import { Sidebar } from './components/Sidebar';
 import { ChatWindow } from './components/ChatWindow';
@@ -8,6 +7,11 @@ import { SearchBar } from './components/SearchBar';
 import { FileLibraryModal } from './components/FileLibraryModal';
 import { initChat } from './services/geminiService';
 import { type Message, type Category, type FileItem } from './types';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { ExportChatIcon } from './components/icons/ExportChatIcon';
+import { SpinnerIcon } from './components/icons/SpinnerIcon';
+
 
 const App: React.FC = () => {
   const [chat, setChat] = useState<Chat | null>(null);
@@ -15,6 +19,8 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [isFileLibraryOpen, setIsFileLibraryOpen] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
 
 
   const initialize = useCallback(async () => {
@@ -122,25 +128,90 @@ const App: React.FC = () => {
     }
     handleSendMessage(prompt);
   };
+  
+  const handleExportChat = async () => {
+    if (!chatWindowRef.current || messages.length <= 1) {
+      console.log("Chat window ref not found or no messages to export.");
+      return;
+    }
+
+    setIsExporting(true);
+
+    try {
+      const element = chatWindowRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#121212', // Match with dark-900
+        scrollY: -window.scrollY,
+        height: element.scrollHeight,
+        windowHeight: element.scrollHeight,
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      
+      const ratio = canvasHeight / canvasWidth;
+      const imgHeight = pdfWidth * ratio;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft > 0) {
+        position -= pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+      
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      pdf.save(`tech-bot-chat-history-${timestamp}.pdf`);
+
+    } catch (error) {
+      console.error("Error exporting chat to PDF:", error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
-    <div className="flex h-screen bg-slate-900 font-sans">
+    <div className="flex h-screen bg-dark-900 font-sans">
       <Sidebar onCategorySelect={handleCategorySelect} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       <div className="flex flex-col flex-1 h-full transition-all duration-300 ease-in-out" style={{ marginLeft: isSidebarOpen ? '256px' : '0' }}>
-        <header className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700 p-4 flex items-center justify-between gap-4">
+        <header className="bg-dark-800/50 backdrop-blur-sm border-b border-dark-600 p-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-md hover:bg-dark-600 focus:outline-none focus:ring-2 focus:ring-brand-primary">
                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
               </svg>
             </button>
             <h1 className="text-xl font-bold text-slate-200 hidden sm:block">Tech-Bot Assistant</h1>
           </div>
-          <div className="w-full max-w-md">
-            <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+          <div className="flex items-center gap-4">
+            <div className="w-full max-w-md">
+              <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+            </div>
+            <button 
+                onClick={handleExportChat} 
+                disabled={isExporting || isLoading || messages.length <= 1}
+                className="p-2 rounded-md hover:bg-dark-600 focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Export chat history as PDF"
+                title="Export chat history as PDF"
+            >
+                {isExporting ? <SpinnerIcon className="w-6 h-6" /> : <ExportChatIcon className="w-6 h-6" />}
+            </button>
           </div>
         </header>
-        <ChatWindow messages={messages} isLoading={isLoading} />
+        <ChatWindow ref={chatWindowRef} messages={messages} isLoading={isLoading} />
         <InputBar onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
        {isFileLibraryOpen && (
